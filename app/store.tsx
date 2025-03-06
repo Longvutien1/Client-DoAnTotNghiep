@@ -1,26 +1,26 @@
-// import { configureStore, ThunkAction, Action, getDefaultMiddleware } from "@reduxjs/toolkit";
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore } from "@reduxjs/toolkit";
+import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import { persistStore, persistReducer } from 'redux-persist';
-
 import rootReducer from "./root";
 
 const persistConfig = {
     key: "root",
     storage,
-    whitelist: ['auth']
-}
+    whitelist: ["auth", "field", "timeSlot"], // Chỉ lưu các state này
+};
 
-const persistedReducer = persistReducer(persistConfig, rootReducer)
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
     reducer: persistedReducer,
-    // middleware: getDefaultMiddleware({
-    //     serializableCheck: {
-    //         ignoredActions: ['persist/PERSIST']
-    //     }
-    // }),
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
+            serializableCheck: {
+                ignoredActions: ["persist/PERSIST", "persist/REHYDRATE"], // ✅ Bỏ qua kiểm tra serialize cho persist actions
+            },
+        }),
 });
+
 
 
 export type RootState = ReturnType<typeof store.getState>;

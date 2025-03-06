@@ -1,8 +1,6 @@
 import Head from 'next/head'
 import React from 'react'
 import { LayoutProps } from '../../models/layout'
-// import Footer from './Footer'
-// import Navbar from './Navbar'
 
 const Layout = ({ children }: LayoutProps) => {
     return (

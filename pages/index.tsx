@@ -1,114 +1,147 @@
-import Image from "next/image";
-import { Geist, Geist_Mono } from "next/font/google";
+import React, { useState } from 'react';
+import {
+  AimOutlined,
+  BellFilled,
+  HomeOutlined,
+  LogoutOutlined,
+  ThunderboltOutlined,
+  TrophyOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
+import { Avatar, Breadcrumb, Dropdown, Layout, Menu, theme } from 'antd';
+// import { useRouter } from 'next/router';
+import Link from 'next/link';
+import { useAppSelector } from '@/app/hook';
+import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { signout } from '@/features/auth/auth.slice';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const { Content, Sider } = Layout;
+
+const getItem = (label: string, key: string, icon: React.ReactNode, path: string) => ({
+  key,
+  label,
+  icon,
+  path
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const items = [
+  getItem("Trang chủ", "home", <Link href="/"> <HomeOutlined /></Link>, "/timDoi"),
+  getItem("Cáp kèo, tìm đối", "timDoi", <Link href="/timDoi"> <ThunderboltOutlined /></Link>, "/timDoi"),
+  getItem("Bảng xếp hạng", "xepHang", <Link href="/xepHang"> <TrophyOutlined /></Link>, "/xepHang"),
+  getItem("Đặt sân", "datSan", <Link href="/datSan"> <AimOutlined /></Link>, "/datSan"),
+  getItem("Thông báo", "thongBao", <BellFilled />, "/thongBao"),
+  getItem("Đội của tôi", "doiCuaToi", <UserOutlined />, "/doiCuaToi"),
+  getItem("Quản lí sân bóng", "manager", <Link href="/manager/quanLiSanBong"> <AimOutlined /></Link>, "/manager")
+];
 
-export default function Home() {
-  return (
-    <div
-      className={`${geistSans.variable} ${geistMono.variable} grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]`}
-    >
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              pages/index.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+const Home = ({ children }: { children: React.ReactNode }) => {
+  const [collapsed, setCollapsed] = useState(false);
+  const dispatch = useDispatch();
+  // const [selectedKey, setSelectedKey] = useState("timDoi"); // Lưu key được chọn
+  // const handleMenuClick = (e: any) => {
+  //   const item = items.find((i) => i.key === e.key);
+  //   if (item) {
+  //     setSelectedKey(e.key);
+  //     // router.push(item.path); // Điều hướng đến route tương ứng
+  //   }
+  // };
+
+  const handleLogout = () => {
+    console.log("Đăng xuất...");
+    dispatch(signout())
+    toast.success("Đăng xuất thành công!")
+    // Xử lý đăng xuất tại đây (xóa token, điều hướng, v.v.)
+  };
+
+  const menu = (
+    <Menu>
+      <Menu.Item key="logout" onClick={handleLogout} icon={<LogoutOutlined />}>
+        Đăng xuất
+      </Menu.Item>
+    </Menu>
   );
-}
+
+  const auth = useAppSelector(item => item.auth)
+
+  console.log("auth", auth);
+
+  const {
+    token: { colorBgContainer, borderRadiusLG },
+  } = theme.useToken();
+
+  return (
+    <Layout style={{ minHeight: '100vh' }}>
+      <Sider collapsible collapsed={collapsed} onCollapse={setCollapsed} className="bg-white">
+        <div className="flex items-center justify-center gap-2 py-4">
+          <Link href={`/`}>  <img src="/newPts.png" alt="" className="h-12" /></Link>
+        </div>
+        <div className="flex flex-col h-full">
+          <Menu
+            theme="light"
+            defaultSelectedKeys={["home"]}
+            mode="inline"
+            items={items}
+          />
+          {
+            auth.value.token !== "" ?
+              <Menu
+                theme="light"
+                defaultSelectedKeys={["login"]}
+                mode="inline"
+                items={[getItem(` `, "user",
+                  <Dropdown overlay={menu} trigger={["click"]} >
+                    <div style={{ cursor: "pointer" }} className='gap-2'>
+                      <div><Avatar src="/newPts.png" size={20} /></div>
+                      <div> {String(auth?.value.user.name)}</div>
+                    </div>
+                  </Dropdown>, "/timDoi")]}
+              />
+              :
+              <Menu
+                theme="light"
+                defaultSelectedKeys={["login"]}
+                mode="inline"
+                items={[getItem("Đăng nhập", "login",
+                  <Link href={`/account/login`} className=" font-semibold hover:text-blue-500 hover:cursor-pointer w-full  py-4 ">
+                    <div className=''>
+                      <LogoutOutlined className="" />
+                      <span>Đăng nhập</span>
+                    </div>
+                  </Link>
+                  , "/login")]}
+              />
+
+          }
+
+        </div>
+
+      </Sider>
+      <Layout>
+        {/* <Header style={{ padding: 0, background: colorBgContainer }} /> */}
+        <Content style={{ margin: '0 16px' }}>
+          <Breadcrumb style={{ margin: '16px 0' }}>
+            <Breadcrumb.Item>User</Breadcrumb.Item>
+            <Breadcrumb.Item>Bill</Breadcrumb.Item>
+          </Breadcrumb>
+          <div
+            style={{
+              padding: 24,
+              minHeight: 360,
+              background: colorBgContainer,
+              borderRadius: borderRadiusLG,
+            }}
+          >
+            <div>{children}</div>
+          </div>
+        </Content>
+        {/* <Footer style={{ textAlign: 'center' }}>
+          Ant Design ©{new Date().getFullYear()} Created by Ant UED
+        </Footer> */}
+      </Layout>
+    </Layout>
+  );
+};
+
+export default Home;

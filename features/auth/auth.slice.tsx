@@ -3,12 +3,10 @@ import {
   changepassword,
   changeprofile,
   signin,
-  signinwithnextauth
 } from "../../api/auth";
 import { IUser } from "../../models/type";
 import { toast } from "react-toastify";
 import { signOut } from "next-auth/react";
-import { store } from "../../app/store";
 
 
 interface IUserState {
@@ -30,21 +28,21 @@ export const login = createAsyncThunk("user/login", async (user: IUser) => {
   return data;
 });
 
-export const loginwithnextauth = createAsyncThunk(
-  "user/loginwithnextauth",
-  async (user: any) => {
-    try {
-      const { data } = await signinwithnextauth(user);
-      toast.success("Đăng nhập thành công");
-      return data;
-    } catch (error: any) {
-      toast.error(error.response.message.data);
-    }
-  }
-);
+// export const loginwithnextauth = createAsyncThunk(
+//   "auth/loginwithnextauth",
+//   async (user: any) => {
+//     try {
+//       const { data } = await signinwithnextauth(user);
+//       toast.success("Đăng nhập thành công");
+//       return data;
+//     } catch (error: any) {
+//       toast.error(error.response.message.data);
+//     }
+//   }
+// );
 
 export const changepass = createAsyncThunk(
-  "user/changepass",
+  "auth/changepass",
   async (user: any) => {
     const { data } = await changepassword(user);
     toast.success("Thay đổi mật khẩu thành công");
@@ -53,7 +51,7 @@ export const changepass = createAsyncThunk(
 );
 
 export const changeuserprofile = createAsyncThunk(
-  "user/changeuserprofile",
+  "auth/changeuserprofile",
   async (user: any) => {
     const { data } = await changeprofile(user);
     toast.success("Thay đổi thông tin thành công");
@@ -100,10 +98,10 @@ const authSlice = createSlice({
       state.error = action.error;
       state.isLoggedIn = true;
     });
-    builder.addCase(loginwithnextauth.fulfilled, (state, action) => {
-      state.value = action.payload;
-      state.isLoggedIn = true;
-    });
+    // builder.addCase(loginwithnextauth.fulfilled, (state, action) => {
+    //   state.value = action.payload;
+    //   state.isLoggedIn = true;
+    // });
   },
 });
 
