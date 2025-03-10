@@ -5,9 +5,12 @@ import React, { useEffect, useState } from 'react'
 import { SearchOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import Home from '..';
+import { GetServerSideProps } from 'next';
+import { getFootballField } from '@/api/football_fields';
+import { FootballField } from '@/models/football_field';
 
 interface CardData {
-  id:number;
+  id: number;
   name: string;
   location: string;
   imageUrl: string;
@@ -15,58 +18,61 @@ interface CardData {
   rating: number;
 }
 
-const data: CardData[] = [
-  {
-    id:1,
-    name: 'FC Sao Mai',
-    location: 'Phạm Cự Lượng, Mỹ Phước, Tp Long Xuyên, An Giang',
-    imageUrl: 'https://i.imgur.com/FiGqoO8.jpeg&ixlib=rb-1.2.1&q=80&w=1080',
-    verified: true,
-    rating: 4.5
-  },
-  {
-    id:2,   
-    name: 'Sân bóng Hương Tiến',
-    location: 'Tdp4, phường Nham Biền, Tp Bắc Giang, Bắc Giang',
-    imageUrl: 'https://i.imgur.com/FiGqoO8.jpeg',
-    verified: true,
-    rating: 3.2
-  },
-  {
-    id:3,
-    name: 'Sân bóng Long long',
-    location: 'Cầu giấy, hà nội',
-    imageUrl: 'https://i.imgur.com/FiGqoO8.jpeg',
+// const data: CardData[] = [
+//   {
+//     id: 1,
+//     name: 'FC Sao Mai',
+//     location: 'Phạm Cự Lượng, Mỹ Phước, Tp Long Xuyên, An Giang',
+//     imageUrl: 'https://i.imgur.com/FiGqoO8.jpeg&ixlib=rb-1.2.1&q=80&w=1080',
+//     verified: true,
+//     rating: 4.5
+//   },
+//   {
+//     id: 2,
+//     name: 'Sân bóng Hương Tiến',
+//     location: 'Tdp4, phường Nham Biền, Tp Bắc Giang, Bắc Giang',
+//     imageUrl: 'https://i.imgur.com/FiGqoO8.jpeg',
+//     verified: true,
+//     rating: 3.2
+//   },
+//   {
+//     id: 3,
+//     name: 'Sân bóng Long long',
+//     location: 'Cầu giấy, hà nội',
+//     imageUrl: 'https://i.imgur.com/FiGqoO8.jpeg',
 
-    verified: true,
-    rating: 5
-  },
-  {
-    id:4,
-    name: 'Sân bóng Phạm hà',
-    location: 'Thanh xuân, hà nội',
-    imageUrl: 'https://i.imgur.com/FiGqoO8.jpeg',
+//     verified: true,
+//     rating: 5
+//   },
+//   {
+//     id: 4,
+//     name: 'Sân bóng Phạm hà',
+//     location: 'Thanh xuân, hà nội',
+//     imageUrl: 'https://i.imgur.com/FiGqoO8.jpeg',
 
-    verified: true,
-    rating: 1.4
-  },
-  // Add more data as needed
-];
+//     verified: true,
+//     rating: 1.4
+//   },
+//   // Add more data as needed
+// ];
+interface datSanProps {
+  data: FootballField[]
+}
 
-
-const datSan = () => {
+const datSan = ({ data }: datSanProps) => {
   const [searchValue, setSearchValue] = useState<string>(''); // Dữ liệu cho tìm kiếm
   const [selectedLocation, setSelectedLocation] = useState<string>(''); // Khu vực đã chọn
-  const [filteredData, setFilteredData] = useState<CardData[]>([]); // Dữ liệu lọc the
-
+  const [filteredData, setFilteredData] = useState<FootballField[]>([]); // Dữ liệu lọc the
+  console.log("datadatadata",data);
+  
   // Lấy tất cả khu vực (location) từ data[]
-  const locations = [...new Set(data.map((item) => item.location))];
+  const locations = [...new Set(data.map((item:FootballField) => item.address))];
 
   // Lọc data theo khu vực đã chọn
   const handleLocationChange = (value: string) => {
     setSelectedLocation(value); // Lưu khu vực đã chọn
     const filtered = data.filter((item) =>
-      item.location.toLowerCase().includes(value.toLowerCase())
+      item.address.toLowerCase().includes(value.toLowerCase())
     );
     setFilteredData(filtered); // Cập nhật dữ liệu lọc
   };
@@ -74,10 +80,10 @@ const datSan = () => {
   // Lọc dữ liệu theo tên sân bóng (searchValue)
   const handleSearch = (value: string) => {
     setSearchValue(value); // Lưu giá trị tìm kiếm
-    // const filtered = data.filter((item) =>
-    //   item.name.toLowerCase().includes(value.toLowerCase())
-    // );
-    // setFilteredData(filtered); // Cập nhật dữ liệu lọc
+    const filtered = data.filter((item) =>
+      item.name.toLowerCase().includes(value.toLowerCase())
+    );
+    setFilteredData(filtered); // Cập nhật dữ liệu lọc
   };
 
   const handleSearchEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -92,8 +98,8 @@ const datSan = () => {
 
   // Sắp xếp dữ liệu theo đánh giá sao (rating) từ cao đến thấp
   useEffect(() => {
-    const sortedData = [...data].sort((a, b) => b.rating - a.rating);
-    setFilteredData(sortedData); // Hiển thị các sân bóng có rating cao nhất
+    // const sortedData = [...data].sort((a, b) => b._id - a.rating);
+    setFilteredData(data); // Hiển thị các sân bóng có rating cao nhất
   }, []);
 
   return (
@@ -136,13 +142,13 @@ const datSan = () => {
 
         {filteredData.map((item, index) => (
           <>
-            <Link href={`/datSan/${item.id}`}>
+            <Link href={`/datSan/${item._id}`}>
               <Card
-                key={index}
+                key={index + 1}
                 name={item.name}
-                location={item.location}
-                imageUrl={item.imageUrl}
-                verified={item.verified}
+                location={item.address}
+                imageUrl={item.image}
+                verified={true}
               />
             </Link>
           </>
@@ -151,5 +157,24 @@ const datSan = () => {
     </div>
   )
 }
+
+export const getServerSideProps: GetServerSideProps = async () => {
+
+  try {
+    const data = await getFootballField();
+
+    return {
+      props: {
+        data: data.data
+      },
+    };
+  } catch (error) {
+    console.error("Error fetching courts:", error);
+    return {
+      props: { courts: [] }, // Trả về mảng rỗng nếu có lỗi
+    };
+  }
+}
+
 datSan.Layout = Home;
 export default datSan

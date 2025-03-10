@@ -25,18 +25,11 @@ const getItem = (label: string, key: string, icon: React.ReactNode, path: string
   path
 });
 
-const items = [
-  getItem("Trang chủ", "home", <Link href="/"> <HomeOutlined /></Link>, "/timDoi"),
-  getItem("Cáp kèo, tìm đối", "timDoi", <Link href="/timDoi"> <ThunderboltOutlined /></Link>, "/timDoi"),
-  getItem("Bảng xếp hạng", "xepHang", <Link href="/xepHang"> <TrophyOutlined /></Link>, "/xepHang"),
-  getItem("Đặt sân", "datSan", <Link href="/datSan"> <AimOutlined /></Link>, "/datSan"),
-  getItem("Thông báo", "thongBao", <BellFilled />, "/thongBao"),
-  getItem("Đội của tôi", "doiCuaToi", <UserOutlined />, "/doiCuaToi"),
-  getItem("Quản lí sân bóng", "manager", <Link href="/manager/quanLiSanBong"> <AimOutlined /></Link>, "/manager")
-];
+
 
 
 const Home = ({ children }: { children: React.ReactNode }) => {
+  const user = useAppSelector(item => item.auth)
   const [collapsed, setCollapsed] = useState(false);
   const dispatch = useDispatch();
   // const [selectedKey, setSelectedKey] = useState("timDoi"); // Lưu key được chọn
@@ -51,7 +44,6 @@ const Home = ({ children }: { children: React.ReactNode }) => {
   const handleLogout = () => {
     console.log("Đăng xuất...");
     dispatch(signout())
-    toast.success("Đăng xuất thành công!")
     // Xử lý đăng xuất tại đây (xóa token, điều hướng, v.v.)
   };
 
@@ -62,10 +54,20 @@ const Home = ({ children }: { children: React.ReactNode }) => {
       </Menu.Item>
     </Menu>
   );
-
-  const auth = useAppSelector(item => item.auth)
-
-  console.log("auth", auth);
+  console.log("user2",user);
+  
+  const items = [
+    getItem("Trang chủ", "home", <Link href="/"> <HomeOutlined /></Link>, "/home"),
+    getItem("Cáp kèo, tìm đối", "timDoi", <Link href="/timDoi"> <ThunderboltOutlined /></Link>, "/timDoi"),
+    getItem("Bảng xếp hạng", "xepHang", <Link href="/xepHang"> <TrophyOutlined /></Link>, "/xepHang"),
+    getItem("Đặt sân", "datSan", <Link href="/datSan"> <AimOutlined /></Link>, "/datSan"),
+    getItem("Thông báo", "thongBao", <BellFilled />, "/thongBao"),
+    getItem("Đội của tôi", "doiCuaToi", <UserOutlined />, "/doiCuaToi"),
+    user.value.user.role === 1 ? 
+    getItem("Sân bóng của tôi", "manager", <Link href="/manager/quanLiSanBong"> <AimOutlined /></Link>, "/manager") 
+    :
+    getItem("Tạo sân bóng", "myField/add", <Link href="/manager/myField/add"> <TrophyOutlined /></Link>, "/myField/add")
+  ];
 
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -73,8 +75,8 @@ const Home = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Sider collapsible collapsed={collapsed} onCollapse={setCollapsed} className="bg-white">
-        <div className="flex items-center justify-center gap-2 py-4">
+      <Sider width={"15%"} collapsible collapsed={collapsed} onCollapse={setCollapsed} style={{ backgroundColor: "white" }} className="bg-white">
+        <div className="flex items-center  gap-2 py-4 px-6">
           <Link href={`/`}>  <img src="/newPts.png" alt="" className="h-12" /></Link>
         </div>
         <div className="flex flex-col h-full">
@@ -85,7 +87,7 @@ const Home = ({ children }: { children: React.ReactNode }) => {
             items={items}
           />
           {
-            auth.value.token !== "" ?
+            user.isLoggedIn ?
               <Menu
                 theme="light"
                 defaultSelectedKeys={["login"]}
@@ -94,7 +96,7 @@ const Home = ({ children }: { children: React.ReactNode }) => {
                   <Dropdown overlay={menu} trigger={["click"]} >
                     <div style={{ cursor: "pointer" }} className='gap-2'>
                       <div><Avatar src="/newPts.png" size={20} /></div>
-                      <div> {String(auth?.value.user.name)}</div>
+                      <div> {String(user?.value.user.name)}</div>
                     </div>
                   </Dropdown>, "/timDoi")]}
               />
@@ -116,7 +118,6 @@ const Home = ({ children }: { children: React.ReactNode }) => {
           }
 
         </div>
-
       </Sider>
       <Layout>
         {/* <Header style={{ padding: 0, background: colorBgContainer }} /> */}
@@ -134,6 +135,7 @@ const Home = ({ children }: { children: React.ReactNode }) => {
             }}
           >
             <div>{children}</div>
+            <div>trang chủ</div>
           </div>
         </Content>
         {/* <Footer style={{ textAlign: 'center' }}>

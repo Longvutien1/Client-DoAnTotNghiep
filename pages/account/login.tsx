@@ -8,9 +8,10 @@ import { FaFacebook } from "react-icons/fa";
 import Link from "next/link";
 import { IUser } from "@/models/type";
 import { toast } from "react-toastify";
-import {  useRouter } from "next/router";
+import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import { login } from "@/features/auth/auth.slice";
+import { useAppDispatch } from "@/app/hook";
 
 type TypeInputs = {
   email: string;
@@ -20,22 +21,31 @@ type TypeInputs = {
 
 const LoginPage: NextPage<TypeInputs> = () => {
   const router = useRouter();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
+  const [form] = Form.useForm();
 
   const onFinish = async (values: IUser) => {
-    try {
-      const user = {
-        email: values.email,
-        password: values.password
-      }
-      const userNew = dispatch(login(user) as any);
-      userNew.data ? toast.error(userNew.data.message) :
-      toast.success("Đăng nhập thành công");
-      router.push("/");
-      
+    const user = {
+      email: values.email,
+      password: values.password
+    };
 
-    } catch (error: any) {
-      toast.error(error.response.data.message);
+    const userNew = await dispatch(login(user)).unwrap(); // unwrap giúp lấy error chính xác
+    if (userNew.message) {
+      // Hiển thị lỗi trong form
+      form.setFields([
+        {
+          name: "email",
+          errors: [""],
+        },
+        {
+          name: "password",
+          errors: ["Tài khoản hoặc mật khẩu không chính xác"],
+        }
+      ]);
+    } else {
+      toast.success("Đăng nhập thành công")
+      router.push("/");
     }
   };
 
@@ -93,7 +103,7 @@ const LoginPage: NextPage<TypeInputs> = () => {
           </div>
 
           {/* Login Form */}
-          <Form layout="vertical" onFinish={onFinish}>
+          <Form form={form} layout="vertical" onFinish={onFinish}>
             <Form.Item label="Email" name="email" rules={[{ required: true, message: "Vui lòng nhập email!" }]}>
               <Input placeholder="Email" />
             </Form.Item>

@@ -24,7 +24,6 @@ export const initialState: IUserState = {
 // Action
 export const login = createAsyncThunk("user/login", async (user: IUser) => {
   const { data } = await signin(user);
-  toast.success("Đăng nhập thành công");
   return data;
 });
 

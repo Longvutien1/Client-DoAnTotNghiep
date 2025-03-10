@@ -11,6 +11,9 @@ import viVN from "antd/lib/locale/vi_VN";
 import "dayjs/locale/vi"; // Import tiếng Việt cho Day.js
 import Link from "next/link";
 import Home from "@/pages";
+import { GetServerSideProps } from "next";
+import { getFootballFieldById } from "@/api/football_fields";
+import { FootballField } from "@/models/football_field";
 
 
 const { TabPane } = Tabs;
@@ -33,22 +36,22 @@ interface Stadium {
 }
 
 // Danh sách sân bóng giả lập
-const stadiums: Stadium[] = [
-  {
-    id: "1",
-    name: "Sân bóng Long Long",
-    location: "Cầu Giấy, Hà Nội",
-    phone: "0912 345 678",
-    imageUrl: "https://i.imgur.com/FiGqoO8.jpeg",
-    fields: ["Sân 1", "Sân 2", "Sân 3"],
-    matches: {
-      "2024-02-25": [
-        { id: "m1", timeSlot: "7:00 - 8:30", teams: "FC A vs FC B" },
-        { id: "m2", timeSlot: "8:30 - 10:00", teams: null },
-      ],
-    },
-  },
-];
+// const stadiums: Stadium[] = [
+//   {
+//     id: "67ce9ea74c79326f98b8bf8e",
+//     name: "Sân bóng Long Long",
+//     location: "Cầu Giấy, Hà Nội",
+//     phone: "0912 345 678",
+//     imageUrl: "https://i.imgur.com/FiGqoO8.jpeg",
+//     fields: ["Sân 1", "Sân 2", "Sân 3"],
+//     matches: {
+//       "2024-02-25": [
+//         { id: "m1", timeSlot: "7:00 - 8:30", teams: "FC A vs FC B" },
+//         { id: "m2", timeSlot: "8:30 - 10:00", teams: null },
+//       ],
+//     },
+//   },
+// ];
 
 // Danh sách sân và ca đá trong ngày
 const fields = [
@@ -58,14 +61,14 @@ const fields = [
     schedules: [
       {
         date: "2025-03-03",
-         timeSlots: [
+        timeSlots: [
           { id: "1", time: "07:00 - 08:30", price: "200K", isBooked: false },
           { id: "2", time: "08:30 - 10:00", price: "200K", isBooked: true },
           { id: "3", time: "15:15 - 16:45", price: "300K", isBooked: false },
         ]
       },
       {
-        date: "2025-03-04", 
+        date: "2025-03-04",
         timeSlots: [
           { id: "4", time: "17:00 - 18:30", price: "300K", isBooked: true },
           { id: "5", time: "19:15 - 20:45", price: "400K", isBooked: false },
@@ -86,19 +89,22 @@ const fields = [
     ]
   }
 ];
+interface DetailProps {
+  data: FootballField
+}
 
-const Detail = () => {
+const Detail = ({ data }: DetailProps) => {
   const router = useRouter();
   const { id } = router.query;
   // console.log(id);
 
-  const stadium = stadiums.find((s) => s.id === id);
+  // const stadium = stadiums.find((s) => s.id === id);
 
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs()); // Ngày đang chọn
   const [activeField, setActiveField] = useState<string | null>(null); // Sân nào đang mở
   const [selectedDate2, setSelectedDate2] = useState(dayjs().format("D/M"));
 
-  if (!stadium) return <p className="text-center text-red-500">Không tìm thấy sân bóng</p>;
+  if (!data) return <p className="text-center text-red-500">Không tìm thấy sân bóng</p>;
 
   dayjs.locale("vi"); // Thiết lập ngôn ngữ cho Dayjs
 
@@ -211,17 +217,17 @@ const Detail = () => {
         </div>
       </Tabs>
 
-      <Link href={`/datSan/${stadium.id}/detail`}>
+      <Link href={`/datSan/${data._id}/detail`}>
         <Card
           className="w-full mx-auto mt-6 max-w-4xl"
-          cover={<img alt="stadium" src={stadium.imageUrl} className="w-full h-64 object-cover" />}
+          cover={<img alt="stadium" src={data.image} className="w-full h-64 object-cover" />}
         >
-          <h2 className="text-2xl font-bold">{stadium.name}</h2>
+          <h2 className="text-2xl font-bold">{data.name}</h2>
           <p className="text-gray-500 flex items-center">
-            <EnvironmentOutlined className="mr-2" /> {stadium.location}
+            <EnvironmentOutlined className="mr-2" /> {data.address}
           </p>
           <p className="text-gray-500 flex items-center">
-            <PhoneOutlined className="mr-2" /> {stadium.phone}
+            <PhoneOutlined className="mr-2" /> {data.phone}
           </p>
         </Card>
       </Link>
@@ -229,6 +235,23 @@ const Detail = () => {
   );
 };
 
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+
+  try {
+    const id = params?.id as string
+    const data = await getFootballFieldById(id);
+    return {
+      props: {
+        data: data.data
+      },
+    };
+  } catch (error) {
+    console.error("Error fetching courts:", error);
+    return {
+      props: { courts: [] }, // Trả về mảng rỗng nếu có lỗi
+    };
+  }
+}
 
 Detail.Layout = Home;
 export default Detail;   

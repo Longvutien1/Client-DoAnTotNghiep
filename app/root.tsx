@@ -5,6 +5,7 @@ import { combineReducers } from "@reduxjs/toolkit";
 import authReducer from "../features/auth/auth.slice";
 import fieldSlice from "../features/field/field.slice";
 import timeSlot from "../features/timeSlot/timeSlot.slice";
+import footballFieldSlice from "../features/footballField/footballField.slice";
 
 
 const rootReducer = combineReducers({
@@ -12,7 +13,8 @@ const rootReducer = combineReducers({
     // user: userSlice,
     auth: authReducer,
     field: fieldSlice,
-    timeSlot: timeSlot
+    timeSlot: timeSlot,
+    footballField: footballFieldSlice
     // favorite: favoriteReducer,
     // comment: commentSlice
 });

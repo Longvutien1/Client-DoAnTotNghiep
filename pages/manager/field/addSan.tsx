@@ -22,7 +22,7 @@ const AddFieldPage = () => {
 
         if (data.payload) {
             toast.success("Thêm sân bóng thành công!");
-            router.replace("/manager/field/listField"); // Chuyển hướng về trang danh sách sân
+            router.replace("/manager/field"); // Chuyển hướng về trang danh sách sân
         } else {
             toast.success("Thêm sân bóng thất bại, vui lòng thử lại!");
         }
