@@ -35,6 +35,24 @@ interface Stadium {
   matches: Record<string, Match[]>; // Lịch đấu theo ngày
 }
 
+interface TimeSlot {
+  id: string;
+  time: string;
+  price: string;
+  isBooked: boolean;
+}
+
+interface Schedule {
+  date: string;
+  timeSlots: TimeSlot[];
+}
+
+interface Field {
+  id: string;
+  name: string;
+  schedules: Schedule[];
+}
+
 // Danh sách sân bóng giả lập
 // const stadiums: Stadium[] = [
 //   {
@@ -177,7 +195,7 @@ const Detail = ({ data }: DetailProps) => {
           <h2 className="text-2xl font-bold my-4"> Danh sách sân ({selectedDate.format("DD/MM/YYYY")})</h2>
           {filteredFields.length > 0 ? (
             <div className="space-y-4">
-              {filteredFields.map((field: any) => (
+              {filteredFields.map((field: Field) => (
                 <div key={field.id}>
                   <Button
                     className="w-full text-left border p-2 text-lg font-medium bg-gray-100 hover:bg-gray-200"
@@ -190,20 +208,23 @@ const Detail = ({ data }: DetailProps) => {
                     <div className="border p-4 mt-2 bg-white shadow-md rounded-lg">
                       <h3 className="text-lg font-semibold mb-2">{field.name} - Ca đá trong ngày</h3>
                       <div className="grid grid-cols-3 gap-2">
-                        {field.timeSlots.map((slot, index: number) => (
-                          <Link href={`/datSan/${id}/${slot.id}`}>
-                            <button
-                              key={index}
-                              className={`border p-2 rounded-md text-center cursor-pointer ${slot.isBooked
-                                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                                : "hover:bg-blue-500 hover:text-white"
-                                }`}
-                              disabled={slot.isBooked}
-                            >
-                              <p className="font-semibold">{slot.time}</p>
-                              <p className="text-sm text-gray-600">{slot.price}</p>
-                            </button>
-                          </Link>
+                        {field.schedules.map((schedule) => (
+                          <div key={schedule.date}>
+                            <h4>{schedule.date}</h4>
+                            <div className="grid grid-cols-3 gap-2">
+                              {schedule.timeSlots.map((slot, index: number) => (
+                                <Link href={`/datSan/${field.id}/${slot.id}`} key={index}>
+                                  <button
+                                    className={`border p-2 rounded-md text-center cursor-pointer ${slot.isBooked ? "bg-gray-300 text-gray-500 cursor-not-allowed" : "hover:bg-blue-500 hover:text-white"
+                                      }`}
+                                    disabled={slot.isBooked}
+                                  >
+                                    {slot.time}
+                                  </button>
+                                </Link>
+                              ))}
+                            </div>
+                          </div>
                         ))}
                       </div>
                     </div>

@@ -12,7 +12,6 @@ import { Avatar, Breadcrumb, Dropdown, Layout, Menu, theme } from 'antd';
 // import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useAppSelector } from '@/app/hook';
-import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { signout } from '@/features/auth/auth.slice';
 

@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import Card from '@/components/Card';
 import { AutoComplete, Input } from 'antd';
 import React, { useEffect, useState } from 'react'
@@ -9,14 +8,14 @@ import { GetServerSideProps } from 'next';
 import { getFootballField } from '@/api/football_fields';
 import { FootballField } from '@/models/football_field';
 
-interface CardData {
-  id: number;
-  name: string;
-  location: string;
-  imageUrl: string;
-  verified: boolean;
-  rating: number;
-}
+// interface CardData {
+//   id: number;
+//   name: string;
+//   location: string;
+//   imageUrl: string;
+//   verified: boolean;
+//   rating: number;
+// }
 
 // const data: CardData[] = [
 //   {
@@ -59,7 +58,7 @@ interface datSanProps {
   data: FootballField[]
 }
 
-const datSan = ({ data }: datSanProps) => {
+const BookField = ({ data }: datSanProps) => {
   const [searchValue, setSearchValue] = useState<string>(''); // Dữ liệu cho tìm kiếm
   const [selectedLocation, setSelectedLocation] = useState<string>(''); // Khu vực đã chọn
   const [filteredData, setFilteredData] = useState<FootballField[]>([]); // Dữ liệu lọc the
@@ -176,5 +175,5 @@ export const getServerSideProps: GetServerSideProps = async () => {
   }
 }
 
-datSan.Layout = Home;
-export default datSan
+BookField.Layout = Home;
+export default BookField

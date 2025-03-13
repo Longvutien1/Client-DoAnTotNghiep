@@ -11,22 +11,35 @@ const paymentMethods = [
   { id: "atm", name: "Thẻ ATM (Thẻ nội địa)" },
 ];
 
+interface Slot {
+  id: string;
+  time: string;
+  price: string;
+}
+
+interface FieldData {
+  id: string;
+  name: string;
+  address: string;
+  slot: Slot;
+}
+
 const BookingPage = () => {
   const router = useRouter();
   const { id, slotId } = router.query;
 
   const [selectedPayment, setSelectedPayment] = useState("bank");
-  const [fieldData, setFieldData] = useState<any>(null);
+  const [fieldData, setFieldData] = useState<FieldData | null>(null);
 
   // Giả lập dữ liệu sân từ server
   useEffect(() => {
     if (id && slotId) {
       const mockData = {
-        id,
+        id: id as string,
         name: "Sân bóng Quân Đội",
         address: "2 Hoàng Mai, Quận Hai Bà Trưng, Hà Nội",
         slot: {
-          id: slotId,
+          id: slotId as string,
           time: "19:15 - 20:45",
           price: "400K",
         },
@@ -34,7 +47,7 @@ const BookingPage = () => {
       setFieldData(mockData);
     }
     console.log("id: ", id, slotId);
-    
+
   }, [id, slotId]);
 
   return (

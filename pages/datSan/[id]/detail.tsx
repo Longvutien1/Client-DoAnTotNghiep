@@ -1,18 +1,20 @@
-/* eslint-disable react/jsx-no-undef */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // pages/Detail.tsx
 import React, { useState } from 'react';
-import { Card, Button, Rate, Input, Collapse } from 'antd'; // Import Ant Design components
+import { Card, Button, Rate, Input, Collapse, List } from 'antd'; // Import Ant Design components
 import { PhoneOutlined, ShareAltOutlined, LikeOutlined, CommentOutlined } from '@ant-design/icons'; // Import icons
-import { UserOutlined } from '@ant-design/icons';
 import Home from '@/pages';
 
 const { Panel } = Collapse;
 const { TextArea } = Input;
-
+interface CommentType {
+  user: string,
+  content: string,
+  date: string
+}
 const AboutUs = () => {
   const [comment, setComment] = useState<string>(''); // Trạng thái cho bình luận
-  const [comments, setComments] = useState<any[]>([]); // Danh sách bình luận
+  const [comments, setComments] = useState<CommentType[]>([]); // Danh sách bình luận
 
   // Dữ liệu sân bóng
   const stadium = {
@@ -98,14 +100,18 @@ const AboutUs = () => {
         </Button>
 
         {/* Hiển thị các bình luận */}
-        {comments.map((com, index) => (
-          <CommentOutlined
-            key={index}
-            author={<a>{com.user}</a>}
-            content={<p>{com.content}</p>}
-            datetime={<span>{com.date}</span>}
-          />
-        ))}
+        <List
+          dataSource={comments}
+          renderItem={(com) => (
+            <List.Item>
+              <List.Item.Meta
+                title={<a>{com.user}</a>}
+                description={com.content}
+              />
+              <span>{com.date}</span>
+            </List.Item>
+          )}
+        />
       </div>
     </div>
   );

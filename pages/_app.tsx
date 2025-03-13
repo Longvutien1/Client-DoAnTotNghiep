@@ -1,5 +1,5 @@
 import "@/styles/globals.css";
-import { SessionProvider } from "next-auth/react";
+// import { SessionProvider } from "next-auth/react";
 import type { AppProps } from "next/app";
 import { Provider } from 'react-redux';
 import NProgress from "nprogress";
@@ -38,7 +38,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const LayoutWrapper = Component.Layout ?? Layout;
   return <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
-      <SessionProvider session={pageProps.session} refetchInterval={0}>
+      {/* <SessionProvider session={pageProps.session} refetchInterval={0}> */}
         <LayoutWrapper>
           <SWRConfig
             value={{
@@ -60,7 +60,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
             />
           </SWRConfig>
         </LayoutWrapper>
-      </SessionProvider>
+      {/* </SessionProvider> */}
     </PersistGate>
   </Provider>
 }

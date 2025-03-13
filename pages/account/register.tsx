@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Button, Checkbox, Form, Input } from "antd";
+import { Button, Checkbox, Form, Image, Input } from "antd";
 import React from "react";
 import { NextPage } from "next";
 import Link from "next/link";
@@ -37,7 +37,7 @@ const Register: NextPage<TypeInputs> = () => {
         {/* Left Content */}
         <div className="w-1/2 ">
           <h2 className="text-2xl font-bold flex items-center gap-2 text-orange-500">
-            <img src="/222.png" alt="" className="h-24" />
+            <Image src="/222.png" alt="" className="h-24" />
           </h2>
           <div className="mt-6 space-y-6">
             <div className="flex items-start space-x-2 text-xl">

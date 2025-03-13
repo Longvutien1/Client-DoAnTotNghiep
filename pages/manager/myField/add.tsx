@@ -1,10 +1,10 @@
 "use client";
-import { useState } from "react";
+// import { useState } from "react";
 import { Input, Button, Form, Card, Upload } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import { CldUploadButton } from "next-cloudinary";
+// import { CldUploadButton } from "next-cloudinary";
 import { useAppDispatch, useAppSelector } from "@/app/hook";
-import { addFieldSlice } from "@/features/field/field.slice";
+// import { addFieldSlice } from "@/features/field/field.slice";
 import { addFootBallFieldSlice } from "@/features/footballField/footballField.slice";
 import { FootballField } from "@/models/football_field";
 import { upload } from "@/utils/upload";
@@ -16,7 +16,7 @@ const CreateFieldPage = () => {
   const router = useRouter();
   console.log("user", user);
 
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
   const onFinish = async (values: FootballField) => {
     console.log("values", values);
@@ -73,11 +73,11 @@ const CreateFieldPage = () => {
             <Input.TextArea placeholder="Nhập mô tả chi tiết về sân" rows={3} />
           </Form.Item>
 
-          <Form.Item className="text-center">
+          {/* <Form.Item className="text-center">
             <Button type="primary" htmlType="submit" loading={loading} className="w-full">
               {loading ? "Đang tạo..." : "Tạo sân bóng"}
             </Button>
-          </Form.Item>
+          </Form.Item> */}
         </Form>
       </Card>
     </div>
