@@ -1,8 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-// pages/Detail.tsx
 import React, { useState } from 'react';
-import { Card, Button, Rate, Input, Collapse, List } from 'antd'; // Import Ant Design components
-import { PhoneOutlined, ShareAltOutlined, LikeOutlined, CommentOutlined } from '@ant-design/icons'; // Import icons
+import * as Antd from "antd";
+const { Card, Button, Rate, Input, Collapse, List } = Antd; // Import Ant Design components
+import * as Icons from '@ant-design/icons';
+const { PhoneOutlined, ShareAltOutlined, LikeOutlined, CommentOutlined } = Icons; // Import icons
 import Home from '@/pages';
 
 const { Panel } = Collapse;
@@ -119,3 +119,4 @@ const AboutUs = () => {
 
 AboutUs.Layout = Home;
 export default AboutUs;
+

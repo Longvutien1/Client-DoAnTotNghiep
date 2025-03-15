@@ -1,6 +1,8 @@
 import React from "react";
 import { useRouter } from "next/router";
-import { Form, Input, InputNumber, Select, Button } from "antd";
+
+import * as Antd from "antd";
+const { Form, Input, InputNumber, Select, Button } = Antd;
 import LayoutManager from "@/components/Layout/layoutManager";
 import { useAppDispatch } from "@/app/hook";
 import { addFieldSlice } from "@/features/field/field.slice";

@@ -1,13 +1,11 @@
-/* eslint-disable react/jsx-key */
-/* eslint-disable react-hooks/rules-of-hooks */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-// pages/detail/[id].tsx
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { Card, Calendar, Tabs, List, Collapse, Button, ConfigProvider } from "antd";
-import { EnvironmentOutlined, ClockCircleOutlined, PhoneOutlined } from "@ant-design/icons";
+import * as Antd from "antd";
+const { Card, Tabs, Collapse, Button } = Antd;
+import * as Icons from '@ant-design/icons';
+const { EnvironmentOutlined, PhoneOutlined } = Icons;
 import dayjs, { Dayjs } from "dayjs";
-import viVN from "antd/lib/locale/vi_VN";
+// import viVN from "antd/lib/locale/vi_VN";
 import "dayjs/locale/vi"; // Import tiếng Việt cho Day.js
 import Link from "next/link";
 import Home from "@/pages";
@@ -16,8 +14,8 @@ import { getFootballFieldById } from "@/api/football_fields";
 import { FootballField } from "@/models/football_field";
 
 
-const { TabPane } = Tabs;
-const { Panel } = Collapse;
+// const { TabPane } = Tabs;
+// const { Panel } = Collapse;
 
 interface Match {
   id: string;
@@ -25,15 +23,15 @@ interface Match {
   teams: string | null; // Nếu null => sân trống
 }
 
-interface Stadium {
-  id: string;
-  name: string;
-  location: string;
-  phone: string;
-  imageUrl: string;
-  fields: string[];
-  matches: Record<string, Match[]>; // Lịch đấu theo ngày
-}
+// interface Stadium {
+//   id: string;
+//   name: string;
+//   location: string;
+//   phone: string;
+//   imageUrl: string;
+//   fields: string[];
+//   matches: Record<string, Match[]>; // Lịch đấu theo ngày
+// }
 
 interface TimeSlot {
   id: string;

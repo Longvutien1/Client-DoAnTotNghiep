@@ -1,7 +1,10 @@
 import Card from '@/components/Card';
-import { AutoComplete, Input } from 'antd';
+import * as Antd from 'antd';
+const { AutoComplete, Input } = Antd;
 import React, { useEffect, useState } from 'react'
-import { SearchOutlined, EnvironmentOutlined } from '@ant-design/icons';
+import * as Icons from '@ant-design/icons';
+const { SearchOutlined, EnvironmentOutlined } = Icons;
+
 import Link from 'next/link';
 import Home from '..';
 import { GetServerSideProps } from 'next';
@@ -62,10 +65,10 @@ const BookField = ({ data }: datSanProps) => {
   const [searchValue, setSearchValue] = useState<string>(''); // Dữ liệu cho tìm kiếm
   const [selectedLocation, setSelectedLocation] = useState<string>(''); // Khu vực đã chọn
   const [filteredData, setFilteredData] = useState<FootballField[]>([]); // Dữ liệu lọc the
-  console.log("datadatadata",data);
-  
+  console.log("datadatadata", data);
+
   // Lấy tất cả khu vực (location) từ data[]
-  const locations = [...new Set(data.map((item:FootballField) => item.address))];
+  const locations = [...new Set(data.map((item: FootballField) => item.address))];
 
   // Lọc data theo khu vực đã chọn
   const handleLocationChange = (value: string) => {
@@ -164,7 +167,8 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
     return {
       props: {
-        data: data.data
+        data: data.data,
+        revalidate: 60,
       },
     };
   } catch (error) {

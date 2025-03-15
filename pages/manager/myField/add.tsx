@@ -1,7 +1,9 @@
 "use client";
 // import { useState } from "react";
-import { Input, Button, Form, Card, Upload } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
+import * as Antd from 'antd';
+const { Input, Button, Form, Card, Upload } = Antd;
+import * as Icons from '@ant-design/icons';
+const { UploadOutlined } = Icons;
 // import { CldUploadButton } from "next-cloudinary";
 import { useAppDispatch, useAppSelector } from "@/app/hook";
 // import { addFieldSlice } from "@/features/field/field.slice";
@@ -73,11 +75,12 @@ const CreateFieldPage = () => {
             <Input.TextArea placeholder="Nhập mô tả chi tiết về sân" rows={3} />
           </Form.Item>
 
-          {/* <Form.Item className="text-center">
-            <Button type="primary" htmlType="submit" loading={loading} className="w-full">
-              {loading ? "Đang tạo..." : "Tạo sân bóng"}
+          <Form.Item className="text-center">
+            <Button type="primary" htmlType="submit"  className="w-full">
+              {/* {loading ? "Đang tạo..." : "Tạo sân bóng"} */}
+              Tạo sân bóng
             </Button>
-          </Form.Item> */}
+          </Form.Item>
         </Form>
       </Card>
     </div>

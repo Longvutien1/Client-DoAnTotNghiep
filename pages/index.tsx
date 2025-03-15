@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
-import {
-  AimOutlined,
-  BellFilled,
-  HomeOutlined,
-  LogoutOutlined,
-  ThunderboltOutlined,
-  TrophyOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
-import { Avatar, Breadcrumb, Dropdown, Layout, Menu, theme } from 'antd';
+// import {
+//   AimOutlined,
+//   BellFilled,
+//   HomeOutlined,
+//   LogoutOutlined,
+//   ThunderboltOutlined,
+//   TrophyOutlined,
+//   UserOutlined,
+// } from '@ant-design/icons';
+
+import * as Icons from "@ant-design/icons";
+const {AimOutlined,BellFilled, HomeOutlined,LogoutOutlined,ThunderboltOutlined,TrophyOutlined, UserOutlined } = Icons;
+import * as Antd from "antd";
+const { Avatar, Breadcrumb, Dropdown, Layout, Menu, theme } = Antd;
 // import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useAppSelector } from '@/app/hook';
@@ -23,9 +27,6 @@ const getItem = (label: string, key: string, icon: React.ReactNode, path: string
   icon,
   path
 });
-
-
-
 
 const Home = ({ children }: { children: React.ReactNode }) => {
   const user = useAppSelector(item => item.auth)
@@ -53,8 +54,8 @@ const Home = ({ children }: { children: React.ReactNode }) => {
       </Menu.Item>
     </Menu>
   );
-  console.log("user2",user);
-  
+  console.log("user2", user);
+
   const items = [
     getItem("Trang chủ", "home", <Link href="/"> <HomeOutlined /></Link>, "/home"),
     getItem("Cáp kèo, tìm đối", "timDoi", <Link href="/timDoi"> <ThunderboltOutlined /></Link>, "/timDoi"),
@@ -62,10 +63,10 @@ const Home = ({ children }: { children: React.ReactNode }) => {
     getItem("Đặt sân", "datSan", <Link href="/datSan"> <AimOutlined /></Link>, "/datSan"),
     getItem("Thông báo", "thongBao", <BellFilled />, "/thongBao"),
     getItem("Đội của tôi", "doiCuaToi", <UserOutlined />, "/doiCuaToi"),
-    user.value.user.role === 1 ? 
-    getItem("Sân bóng của tôi", "manager", <Link href="/manager/quanLiSanBong"> <AimOutlined /></Link>, "/manager") 
-    :
-    getItem("Tạo sân bóng", "myField/add", <Link href="/manager/myField/add"> <TrophyOutlined /></Link>, "/myField/add")
+    user.value.user.role === 1 ?
+      getItem("Sân bóng của tôi", "manager", <Link href="/manager/quanLiSanBong"> <AimOutlined /></Link>, "/manager")
+      :
+      getItem("Tạo sân bóng", "myField/add", <Link href="/manager/myField/add"> <TrophyOutlined /></Link>, "/myField/add")
   ];
 
   const {

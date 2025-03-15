@@ -1,22 +1,26 @@
-import { Button, Checkbox, Form, Image, Input } from "antd";
+
 import React from "react";
-import { NextPage } from "next";
+import * as Antd from "antd";
+const { Form, Input, Button, Checkbox } = Antd;
+// import { NextPage } from "next";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
-import Link from "next/link";
+// import Link from "next/link";
 import { IUser } from "@/models/type";
 import { toast } from "react-toastify";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { login } from "@/features/auth/auth.slice";
 import { useAppDispatch } from "@/app/hook";
+import Link from "next/link";
+import Image from "next/image";
 
-type TypeInputs = {
-  email: string;
-  password: string;
-  providers: string;
-};
+// type TypeInputs = {
+//   email: string;
+//   password: string;
+//   providers: string;
+// };
 
-const LoginPage: NextPage<TypeInputs> = () => {
+const LoginPage = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [form] = Form.useForm();
@@ -52,7 +56,7 @@ const LoginPage: NextPage<TypeInputs> = () => {
         {/* Left Content */}
         <div className="w-1/2 ">
           <h2 className="text-2xl font-bold flex items-center gap-2 text-orange-500">
-            <Image  src="/222.png" alt="" className="h-24" />
+            <Image src="/222.png" alt="logo" width={200} height={100} className="h-24 w-auto" />
           </h2>
           <div className="mt-6 space-y-6">
             <div className="flex items-start space-x-2 text-xl">
@@ -78,11 +82,9 @@ const LoginPage: NextPage<TypeInputs> = () => {
             </div>
           </div>
         </div>
-
         {/* Right Form */}
         <div className="rounded-lg w-1/2 p-10 bg-white">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">Chào mừng trở lại</h2>
-
           {/* Social Login */}
           <div className="flex space-x-4">
             <Button className="flex-1 " icon={<FcGoogle />} block>
@@ -92,15 +94,16 @@ const LoginPage: NextPage<TypeInputs> = () => {
               Đăng nhập với Facebook
             </Button>
           </div>
-
           <div className="flex items-center my-4">
             <div className="flex-1 border-t border-gray-300"></div>
             <span className="px-3 text-gray-500">or</span>
             <div className="flex-1 border-t border-gray-300"></div>
           </div>
-
           {/* Login Form */}
-          <Form form={form} layout="vertical" onFinish={onFinish}>
+          <Form layout="vertical"
+            form={form}
+            onFinish={onFinish}
+          >
             <Form.Item label="Email" name="email" rules={[{ required: true, message: "Vui lòng nhập email!" }]}>
               <Input placeholder="Email" />
             </Form.Item>

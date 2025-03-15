@@ -1,11 +1,12 @@
-import layoutManager from '@/components/Layout/layoutManager'
 import React, { useEffect } from 'react'
 import { useState } from "react";
-import { Layout, Menu, Calendar, Modal, Badge, ConfigProvider } from "antd";
+import * as Antd from "antd";
+const { Layout, Menu, Calendar, Modal, Badge, ConfigProvider } = Antd;
 import { format } from "date-fns";
 import dayjs, { Dayjs } from "dayjs";
 import viVN from "antd/lib/locale/vi_VN";
 import "dayjs/locale/vi";
+import layoutManager from '@/components/Layout/layoutManager'
 
 const { Sider, Content } = Layout;
 

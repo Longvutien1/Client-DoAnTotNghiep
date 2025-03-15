@@ -1,6 +1,8 @@
 import React from "react";
 import { useRouter } from "next/router";
-import { Form, Input, InputNumber, Select, Button } from "antd";
+
+import * as Antd from "antd";
+const { Form, Input, InputNumber, Select, Button } = Antd;
 import LayoutManager from "@/components/Layout/layoutManager";
 import { useAppDispatch } from "@/app/hook";
 import { updateFieldSlice } from "@/features/field/field.slice";
@@ -10,8 +12,6 @@ import { useSelector } from "react-redux";
 import { RootStateType } from "@/models/type";
 
 const { Option } = Select;
-
-
 
 const EditFieldPage = () => {
     const fieldData = useSelector((state: RootStateType) => state.field.value)

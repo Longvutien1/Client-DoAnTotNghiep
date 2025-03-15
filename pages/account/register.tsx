@@ -1,5 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Button, Checkbox, Form, Image, Input } from "antd";
+import * as Antd from "antd";
+const { Form, Input, Button, Checkbox } = Antd;
+import Image from "next/image";
 import React from "react";
 import { NextPage } from "next";
 import Link from "next/link";
@@ -37,7 +38,7 @@ const Register: NextPage<TypeInputs> = () => {
         {/* Left Content */}
         <div className="w-1/2 ">
           <h2 className="text-2xl font-bold flex items-center gap-2 text-orange-500">
-            <Image src="/222.png" alt="" className="h-24" />
+          <Image src="/222.png" alt="logo" width={200} height={100} className="h-24 w-auto" />
           </h2>
           <div className="mt-6 space-y-6">
             <div className="flex items-start space-x-2 text-xl">
@@ -111,3 +112,4 @@ const Register: NextPage<TypeInputs> = () => {
 };
 
 export default Register;
+

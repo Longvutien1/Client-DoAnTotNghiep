@@ -1,14 +1,10 @@
-import { Layout, Menu } from "antd";
+import React from 'react'
+import * as Antd from "antd";
+const { Layout, Menu } = Antd;
 import "dayjs/locale/vi";
 import Link from "next/link";
-import {
-    AimOutlined,
-    BellFilled,
-    HomeOutlined,
-    ThunderboltOutlined,
-    TrophyOutlined,
-    UserOutlined,
-} from '@ant-design/icons';
+import * as Icons from '@ant-design/icons';
+const { AimOutlined, BellFilled, HomeOutlined, ThunderboltOutlined, TrophyOutlined, UserOutlined } = Icons
 
 const { Header, Sider, } = Layout;
 
@@ -67,7 +63,7 @@ const LayoutManager = ({ children }: { children: React.ReactNode }) => {
             </Sider>
             <Layout>
                 <Header className="bg-white shadow-md px-8 ">
-                    <div className="my-auto  text-right text-[16px] "><UserOutlined/> Vũ Tiến Long</div>
+                    <div className="my-auto  text-right text-[16px] "><UserOutlined /> Vũ Tiến Long</div>
                 </Header>
                 {children}
             </Layout>

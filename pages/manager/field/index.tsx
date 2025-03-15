@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from "react";
-import { Table, Button, Input, Space, Badge, Modal, message, Popconfirm, Form } from "antd";
+import * as Antd from "antd";
+const { Table, Button, Input, Space, Badge, Modal, Popconfirm, Form } = Antd;
 import { EyeOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import LayoutManager from "@/components/Layout/layoutManager";
 import { getListFields, removeFieldSlice } from "@/features/field/field.slice";
-import { Field, Schedule, TimeSlot } from "@/models/field";
+import { Field, TimeSlot } from "@/models/field";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "@/app/hook";
 import { addTimeSlotSlice, getListTimeSlots, removeTimeSlot, removeTimeSlotByFieldId, updateTimeSlotSlice } from "@/features/timeSlot/timeSlot.slice";

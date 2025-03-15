@@ -1,5 +1,8 @@
+
 import { useEffect, useState } from "react";
-import { Button, Modal, Form, Input, Upload, Card } from "antd";
+import * as Antd from "antd";
+const { Button, Modal, Form, Input, Upload, Card } = Antd;
+
 import { UploadOutlined, EditOutlined } from "@ant-design/icons";
 import LayoutManager from "@/components/Layout/layoutManager";
 import { useAppDispatch, useAppSelector } from "@/app/hook";
@@ -75,4 +78,3 @@ const MyField = () => {
 
 MyField.Layout = LayoutManager
 export default MyField;
-

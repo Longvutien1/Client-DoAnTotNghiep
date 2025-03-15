@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { Button, Input, Radio, Card } from "antd";
+import * as Antd from 'antd';
+const { Button, Input, Radio, Card } = Antd;
 import Home from "@/pages";
 
 const paymentMethods = [
