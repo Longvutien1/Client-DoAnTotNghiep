@@ -6,17 +6,15 @@ import authReducer from "../features/auth/auth.slice";
 import fieldSlice from "../features/field/field.slice";
 import timeSlot from "../features/timeSlot/timeSlot.slice";
 import footballFieldSlice from "../features/footballField/footballField.slice";
+import notificationSlice from "../features/notification/notification.slice";
 
 
 const rootReducer = combineReducers({
-    // product: productReducer,
-    // user: userSlice,
     auth: authReducer,
     field: fieldSlice,
     timeSlot: timeSlot,
-    footballField: footballFieldSlice
-    // favorite: favoriteReducer,
-    // comment: commentSlice
+    footballField: footballFieldSlice,
+    notification: notificationSlice
 });
 
 export default rootReducer;

@@ -1,5 +1,6 @@
 import { Field, TimeSlot } from "./field";
 import { FootballField } from "./football_field";
+import { Notification } from "./notification";
 
 export interface IUser {
     _id?: string,
@@ -26,6 +27,9 @@ export interface RootStateType {
     footballField: {
         value: FootballField
     };
+    notification:{
+        value: Notification[]
+    }
 }
 
 

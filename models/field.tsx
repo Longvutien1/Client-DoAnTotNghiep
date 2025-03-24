@@ -1,3 +1,4 @@
+import { FootballField } from "./football_field";
 
 export interface TimeSlot {
     _id: string;
@@ -5,6 +6,7 @@ export interface TimeSlot {
     price: string;
     isBooked: boolean;
     fieldId: Field | string;
+    datetime?: string;
 }
 
 export interface Schedule {
@@ -18,7 +20,8 @@ export interface Field {
     start_time: string; // Giờ mở cửa sân
     end_time: string; // Giờ đóng cửa sân
     status: "Hoạt động" | "Bảo trì"; // Tình trạng sân bóng
-    schedules?: Schedule[]; // Không bắt buộc, có thể thêm sau
+    foolballFieldId?: FootballField | any;
+    timeSlots?: TimeSlot[]; // Không bắt buộc, có thể thêm sau
 }
 
 

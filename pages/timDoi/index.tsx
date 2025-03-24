@@ -1,7 +1,7 @@
+import LayoutHomepage from '@/components/Layout/layoutHomepage'
 import React from 'react'
-import LayoutHomePage from '@/components/Layout'
 
-const timDoi = () => {
+const TimDoi = () => {
   return (
     <div>timDoi
       <div>aaaaaaaaaaaaaaaaaaaaaaaaaa </div>
@@ -9,5 +9,5 @@ const timDoi = () => {
   )
 }
 
-timDoi.Layout = LayoutHomePage
-export default timDoi
+TimDoi.Layout = LayoutHomepage
+export default TimDoi

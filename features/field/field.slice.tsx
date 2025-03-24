@@ -1,4 +1,4 @@
-import { createField, deleteField, getFields, updateField } from "@/api/field"
+import { createField, deleteField, getFields, getFieldsByIdFootball, updateField } from "@/api/field"
 import { Field } from "@/models/field"
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 
@@ -7,6 +7,14 @@ export const getListFields = createAsyncThunk(
     "field/getListFields",
     async () => {
         const { data } = await getFields()
+        return data
+    }
+)
+
+export const getListFieldsSlice = createAsyncThunk(
+    "field/getListFieldsSlice",
+    async (id:string) => {
+        const { data } = await getFieldsByIdFootball(id)
         return data
     }
 )
@@ -48,6 +56,9 @@ const fieldSlice = createSlice({
     ,
     extraReducers: (builder) => {
         builder.addCase(getListFields.fulfilled, (state: any, action) => {
+            state.value = action.payload
+        })
+        builder.addCase(getListFieldsSlice.fulfilled, (state: any, action) => {
             state.value = action.payload
         })
         builder.addCase(addFieldSlice.fulfilled, (state: any, action) => {

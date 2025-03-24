@@ -1,10 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from "react";
 import * as Antd from "antd";
 const { Table, Button, Input, Space, Badge, Modal, Popconfirm, Form } = Antd;
-import { EyeOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import * as Icons from "@ant-design/icons";
+const { EyeOutlined, EditOutlined, DeleteOutlined } = Icons
 import LayoutManager from "@/components/Layout/layoutManager";
-import { getListFields, removeFieldSlice } from "@/features/field/field.slice";
+import { getListFieldsSlice, removeFieldSlice } from "@/features/field/field.slice";
 import { Field, TimeSlot } from "@/models/field";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "@/app/hook";
@@ -16,12 +16,16 @@ import { RootStateType } from "@/models/type";
 
 const ListField = () => {
     const timeSLotData = useSelector((state: RootStateType) => state.timeSlot.value)
+    const footballField = useSelector((state: RootStateType) => state.footballField.value)
     const fieldData = useSelector((state: RootStateType) => state.field.value)
     const [searchText, setSearchText] = useState("");
     const dispath = useAppDispatch();
     const [showModal, setShowModal] = useState(false);
     const [form] = Form.useForm();
     const [editingTimeSlot, setEditingTimeSlot] = useState<TimeSlot | null>(null);
+    const [editingFieldId, setEditingFieldId] = useState<string | null>(null);
+
+    console.log("fieldData", fieldData);
 
     // delete timeSLot
     const handleDelete = (parentKey: Field, subKey: string, name: string) => {
@@ -43,7 +47,10 @@ const ListField = () => {
         setShowModal(true);
     };
 
-    const handleAddTimeSlot = () => {
+    const handleAddTimeSlot = (idField: string) => {
+        console.log("idField check: ", idField);
+
+        setEditingFieldId(idField)
         setEditingTimeSlot(null); // Xóa dữ liệu cũ
         form.resetFields(); // Reset form ngay lập tức để không giữ giá trị cũ
         setTimeout(() => setShowModal(true), 0); // Đảm bảo state đã cập nhật trước khi mở modal
@@ -57,7 +64,8 @@ const ListField = () => {
     };
 
     // Khi submit form
-    const handleSubmit = async (fieldId: string) => {
+    const handleSubmit = async () => {
+
         if (editingTimeSlot) {
             // Cập nhật TimeSlot
             console.log("đã vào edit");
@@ -82,11 +90,10 @@ const ListField = () => {
         } else {
             // Thêm TimeSlot mới
             const values = await form.validateFields();
-            console.log("values", values);
             const newTimeSlot = {
                 ...values,
                 isBooked: false,
-                fieldId: fieldId
+                fieldId: editingFieldId
             }
             const data = await dispath(addTimeSlotSlice(newTimeSlot));
             if (data.payload) {
@@ -105,9 +112,11 @@ const ListField = () => {
         } else {
             form.setFieldsValue(editingTimeSlot); // Load lại dữ liệu TimeSlot khi sửa
         }
-        dispath(getListTimeSlots());
-        dispath(getListFields());
-    }, [editingTimeSlot]);
+        const getData = async () => {
+            await dispath(getListFieldsSlice(footballField._id as string));
+        }
+        getData()
+    }, [editingTimeSlot, timeSLotData]);
 
     const columns = [
         { title: "#", dataIndex: "key", key: "key" },
@@ -145,7 +154,9 @@ const ListField = () => {
 
     // Table con hiển thị lịch đặt sân
     const expandedRowRender = (record: Field) => {
-        const dataSource = timeSLotData.filter((item: TimeSlot) => item.fieldId === record._id);
+        const dataSource = fieldData.filter((item: Field) => item._id === record._id);
+        const fieldIds = dataSource.map((item: any) => item.timeSlots);
+
         const subColumns = [
             { title: "Ca ", dataIndex: "time", key: "time" },
             { title: "Gía tiền", dataIndex: "price", key: "price" },
@@ -169,20 +180,20 @@ const ListField = () => {
             },
         ];
         return <>
-            <Table className="border mb-2" columns={subColumns} dataSource={dataSource || []} pagination={false} />
-            <Button type="primary" onClick={handleAddTimeSlot}>Thêm ca đá</Button>
+            <Table className="border mb-2" columns={subColumns} dataSource={fieldIds[0] || []} pagination={{ pageSize: 5 }} />
+            <Button type="primary" onClick={() => handleAddTimeSlot(record._id)}>Thêm ca đá</Button>
 
             {/* Modal nhập thông tin ca đá */}
             <Modal
                 title={editingTimeSlot ? "Sửa Ca Đá" : "Thêm Ca Đá"}
                 visible={showModal}
                 onCancel={handleClose}
-                onOk={() => handleSubmit(record._id)}
+                onOk={handleSubmit}
             >
                 <Form
                     form={form}
                     layout="vertical"
-                    onFinish={handleSubmit}
+                // onFinish={() => handleSubmit(record)}
                 >
                     <Form.Item
                         label="Giờ"
@@ -219,7 +230,7 @@ const ListField = () => {
                 <h1 className="text-xl font-semibold mb-4">Quản lý sân bóng</h1>
                 <div className="flex justify-between mb-4 ">
                     <Button type="primary" className="bg-green-500">
-                        <Link href={'/manager/field/addSan'}>Thêm sân bóng</Link>
+                        <Link href={`/manager/field/addSan`}>Thêm sân bóng</Link>
                     </Button>
                     <Input
                         placeholder="Tìm kiếm..."

@@ -7,6 +7,8 @@ import dayjs, { Dayjs } from "dayjs";
 import viVN from "antd/lib/locale/vi_VN";
 import "dayjs/locale/vi";
 import layoutManager from '@/components/Layout/layoutManager'
+import { useAppDispatch, useAppSelector } from '@/app/hook';
+import { getFootballFieldByIdUserSlice } from '@/features/footballField/footballField.slice';
 
 const { Sider, Content } = Layout;
 
@@ -64,6 +66,9 @@ const QuanLiSanBong = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [selectedDate, setSelectedDate] = useState(format(new Date(), "yyyy-MM-dd"));
+  const user = useAppSelector((state) => state.auth.value.user)
+  const dispatch = useAppDispatch();
+
 
   dayjs.locale("vi"); // Chuyển Ant Design sang Tiếng Việt
 
@@ -102,14 +107,17 @@ const QuanLiSanBong = () => {
     return acc;
   }, {} as Record<string, typeof bookingsData>);
   useEffect(() => {
-    console.log("Usser effect");
-
-    Modal.confirm({
-      title: "Test Modal",
-      content: "Nếu bạn thấy cái này, thì Modal đang hoạt động!",
-      okText: "OK",
-    });
-  }, []);
+    // Modal.confirm({
+    //   title: "Test Modal",
+    //   content: "Nếu bạn thấy cái này, thì Modal đang hoạt động!",
+    //   okText: "OK",
+    // });
+    const getData = async () => {
+      const data = await dispatch(getFootballFieldByIdUserSlice(user._id as string))
+      console.log("data:", data);
+    }
+    getData();
+  }, [user]);
   return (
     <Layout className="flex">
       {/* Menu Danh sách sân */}

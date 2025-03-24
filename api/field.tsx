@@ -17,6 +17,10 @@ export const getFieldById = (fieldId: string) => {
   return API_NodeJS.get(`fields/${fieldId}`);
 };
 
+export const getFieldsByIdFootball = (footballId: string) => {
+  return API_NodeJS.get<Field[]>(`fields/footballId/${footballId}`);
+};
+
 // Cập nhật thông tin sân bóng
 export const updateField = (fieldId: string, field: Field) => {
   return API_NodeJS.patch(`fields/${fieldId}`, field);

@@ -10,6 +10,7 @@ import Home from '..';
 import { GetServerSideProps } from 'next';
 import { getFootballField } from '@/api/football_fields';
 import { FootballField } from '@/models/football_field';
+import LayoutHomepage from '@/components/Layout/layoutHomepage';
 
 // interface CardData {
 //   id: number;
@@ -179,5 +180,5 @@ export const getServerSideProps: GetServerSideProps = async () => {
   }
 }
 
-BookField.Layout = Home;
+BookField.Layout = LayoutHomepage;
 export default BookField

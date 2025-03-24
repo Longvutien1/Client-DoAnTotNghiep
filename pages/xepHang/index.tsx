@@ -1,10 +1,10 @@
-import LayoutHomePage from '@/components/Layout'
+import LayoutHomepage from '@/components/Layout/layoutHomepage'
 import React from 'react'
 
-const xepHang = () => {
+const XepHang = () => {
   return (
     <div>xepHang</div>
   )
 }
-xepHang.Layout = LayoutHomePage
-export default xepHang
+XepHang.Layout = LayoutHomepage
+export default XepHang

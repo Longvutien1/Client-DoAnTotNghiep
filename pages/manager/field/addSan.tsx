@@ -1,25 +1,32 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/router";
 
 import * as Antd from "antd";
 const { Form, Input, InputNumber, Select, Button } = Antd;
 import LayoutManager from "@/components/Layout/layoutManager";
-import { useAppDispatch } from "@/app/hook";
+import { useAppDispatch, useAppSelector } from "@/app/hook";
 import { addFieldSlice } from "@/features/field/field.slice";
 import { Field } from "@/models/field";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import { RootStateType } from "@/models/type";
+import { getFootballFieldByIdUserSlice } from "@/features/footballField/footballField.slice";
 
 const { Option } = Select;
 
 const AddFieldPage = () => {
+    const fieldData = useSelector((state: RootStateType) => state.footballField.value)
+    const user = useAppSelector((state) => state.auth.value.user)
+
     const router = useRouter();
     const [form] = Form.useForm();
     const dispatch = useAppDispatch();
+    console.log("fieldData", fieldData._id);
 
     // Gửi dữ liệu lên server
     const handleSubmit = async (values: Field) => {
         console.log("values", values);
-        const data = await dispatch(addFieldSlice(values));
+        const data = await dispatch(addFieldSlice({ ...values, foolballFieldId: String(fieldData._id) }));
         console.log("data", data);
 
         if (data.payload) {

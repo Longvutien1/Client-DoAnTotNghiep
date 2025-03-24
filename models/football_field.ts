@@ -1,5 +1,5 @@
 export interface FootballField {
-    _id: string;
+    _id?: string;
     name: string;
     image: string; 
     address: string;

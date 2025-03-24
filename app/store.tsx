@@ -6,7 +6,7 @@ import rootReducer from "./root";
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["auth", "field", "timeSlot"], // Chỉ lưu các state này
+  whitelist: ["auth", "field", "timeSlot","footballField, notification"], // Chỉ lưu các state này
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

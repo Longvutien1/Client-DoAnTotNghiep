@@ -4,6 +4,7 @@ const { Card, Button, Rate, Input, Collapse, List } = Antd; // Import Ant Design
 import * as Icons from '@ant-design/icons';
 const { PhoneOutlined, ShareAltOutlined, LikeOutlined, CommentOutlined } = Icons; // Import icons
 import Home from '@/pages';
+import LayoutHomepage from '@/components/Layout/layoutHomepage';
 
 const { Panel } = Collapse;
 const { TextArea } = Input;
@@ -117,6 +118,6 @@ const AboutUs = () => {
   );
 };
 
-AboutUs.Layout = Home;
+AboutUs.Layout = LayoutHomepage;
 export default AboutUs;
 

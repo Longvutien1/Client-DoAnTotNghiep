@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as Antd from "antd";
 const { Card, Tabs, Collapse, Button } = Antd;
 import * as Icons from '@ant-design/icons';
@@ -12,6 +12,15 @@ import Home from "@/pages";
 import { GetServerSideProps } from "next";
 import { getFootballFieldById } from "@/api/football_fields";
 import { FootballField } from "@/models/football_field";
+import { getFieldById, getFieldsByIdFootball } from "@/api/field";
+import { useDispatch, useSelector } from "react-redux";
+import { getFootballFieldByIdUserSlice, getListFootballFieldSlice } from "@/features/footballField/footballField.slice";
+import { useAppDispatch, useAppSelector } from "@/app/hook";
+import { getListFieldsSlice } from "@/features/field/field.slice";
+import { Field, TimeSlot } from "@/models/field";
+import { getTimeSlot } from "@/api/timeSlot";
+import { RootStateType } from "@/models/type";
+import LayoutHomepage from "@/components/Layout/layoutHomepage";
 
 
 // const { TabPane } = Tabs;
@@ -33,23 +42,23 @@ interface Match {
 //   matches: Record<string, Match[]>; // Lịch đấu theo ngày
 // }
 
-interface TimeSlot {
-  id: string;
-  time: string;
-  price: string;
-  isBooked: boolean;
-}
+// interface TimeSlot {
+//   id: string;
+//   time: string;
+//   price: string;
+//   isBooked: boolean;
+// }
 
-interface Schedule {
-  date: string;
-  timeSlots: TimeSlot[];
-}
+// interface Schedule {
+//   date: string;
+//   timeSlots: TimeSlot[];
+// }
 
-interface Field {
-  id: string;
-  name: string;
-  schedules: Schedule[];
-}
+// interface Field {
+//   id: string;
+//   name: string;
+//   schedules: Schedule[];
+// }
 
 // Danh sách sân bóng giả lập
 // const stadiums: Stadium[] = [
@@ -106,27 +115,24 @@ const fields = [
   }
 ];
 interface DetailProps {
-  data: FootballField
+  data: Field[]
 }
 
 const Detail = ({ data }: DetailProps) => {
+  const footballField = useSelector((state: RootStateType) => state.footballField.value)
   const router = useRouter();
   const { id } = router.query;
-  // console.log(id);
-
-  // const stadium = stadiums.find((s) => s.id === id);
+  const dispatch = useAppDispatch();
+  console.log("data", data);
 
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs()); // Ngày đang chọn
   const [activeField, setActiveField] = useState<string | null>(null); // Sân nào đang mở
   const [selectedDate2, setSelectedDate2] = useState(dayjs().format("D/M"));
+  console.log("selectedDate", selectedDate.format("D/M/YYYY"));
 
   if (!data) return <p className="text-center text-red-500">Không tìm thấy sân bóng</p>;
 
   dayjs.locale("vi"); // Thiết lập ngôn ngữ cho Dayjs
-
-  console.log("selectedDate2", selectedDate2);
-
-
 
   // Hàm toggle mở / đóng sân
   const toggleField = (id: string) => {
@@ -143,8 +149,8 @@ const Detail = ({ data }: DetailProps) => {
   };
 
   // Lọc danh sách sân có ca đá trong ngày được chọn
-  const filteredFields = fields.map((field) => {
-    const schedule = field.schedules.find((s) => s.date === selectedDate.format("YYYY-MM-DD"));
+  const filteredFields = data.map((field: any) => {
+    const schedule = field.timeSlots.find((s: any) => s.date === selectedDate.format("YYYY-MM-DD"));
     return schedule ? { ...field, timeSlots: schedule.timeSlots } : null;
   }).filter(Boolean) as typeof fields;
 
@@ -171,6 +177,9 @@ const Detail = ({ data }: DetailProps) => {
     };
   });
 
+  console.log("data", data);
+
+
   return (
     <div className="container mx-auto">
       {/* Chọn ngày */}
@@ -191,62 +200,65 @@ const Detail = ({ data }: DetailProps) => {
         {/* Danh sách sân */}
         <div className="max-w-4xl mx-auto  text-center">
           <h2 className="text-2xl font-bold my-4"> Danh sách sân ({selectedDate.format("DD/MM/YYYY")})</h2>
-          {filteredFields.length > 0 ? (
+          {data &&
             <div className="space-y-4">
-              {filteredFields.map((field: Field) => (
-                <div key={field.id}>
+              {data.map((field: Field, index: number) => (
+                <div key={index + 1}>
                   <Button
                     className="w-full text-left border p-2 text-lg font-medium bg-gray-100 hover:bg-gray-200"
-                    onClick={() => setActiveField(activeField === field.id ? null : field.id)}
+                    onClick={() => setActiveField(activeField === field._id ? null : field._id)} disabled={field.status == "Bảo trì" ? true : false}
                   >
-                    {field.name}
+                    {field.name} {field.status == "Bảo trì" ? field.status : ""}
                   </Button>
 
-                  {activeField === field.id && (
+                  {activeField === field._id && (
                     <div className="border p-4 mt-2 bg-white shadow-md rounded-lg">
                       <h3 className="text-lg font-semibold mb-2">{field.name} - Ca đá trong ngày</h3>
-                      <div className="grid grid-cols-3 gap-2">
-                        {field.schedules.map((schedule) => (
-                          <div key={schedule.date}>
-                            <h4>{schedule.date}</h4>
-                            <div className="grid grid-cols-3 gap-2">
-                              {schedule.timeSlots.map((slot, index: number) => (
-                                <Link href={`/datSan/${field.id}/${slot.id}`} key={index}>
-                                  <button
-                                    className={`border p-2 rounded-md text-center cursor-pointer ${slot.isBooked ? "bg-gray-300 text-gray-500 cursor-not-allowed" : "hover:bg-blue-500 hover:text-white"
-                                      }`}
-                                    disabled={slot.isBooked}
-                                  >
-                                    {slot.time}
-                                  </button>
+                      {/* <div className="grid grid-cols-3 gap-2"> */}
+                      {/* {data.map((schedule, index: number) => ( */}
+                      <div key={index + 1}>
+                        <h4>{selectedDate.format("DD/MM/YYYY")}</h4>
+                        <div className="gap-4 w-full text-left">
+                          {field.timeSlots && field.timeSlots.length > 0 ?
+                            field.timeSlots.map((slot: TimeSlot, index: number) => (
+
+                              <Button key={index} disabled={slot.isBooked && slot.datetime === selectedDate.format("DD/MM/YYYY") ? true : false}
+                                className={`border p-2 rounded-md text-center cursor-pointer m-1 ${slot.isBooked && slot.datetime === selectedDate.format("DD/MM/YYYY") ?
+                                  "bg-gray-300 text-gray-500 cursor-not-allowed" :
+                                  "hover:bg-blue-500 hover:text-white"
+                                  }`}
+                              >
+                                <Link href={`/datSan/${field._id}/${slot._id}?date=${selectedDate.format("DD/MM/YYYY")}`}>
+                                  {slot.time}
                                 </Link>
-                              ))}
-                            </div>
-                          </div>
-                        ))}
+                              </Button>
+                            ))
+                            :
+                            <p className="text-center text-gray-500">Không có ca đá nào trong ngày này.</p>
+                          }
+                        </div>
                       </div>
                     </div>
+
                   )}
                 </div>
               ))}
             </div>
-          ) : (
-            <p className="text-center text-gray-500">Không có ca đá nào trong ngày này.</p>
-          )}
+          }
         </div>
       </Tabs>
 
-      <Link href={`/datSan/${data._id}/detail`}>
+      <Link href={`/datSan/${footballField._id}/detail`}>
         <Card
           className="w-full mx-auto mt-6 max-w-4xl"
-          cover={<img alt="stadium" src={data.image} className="w-full h-64 object-cover" />}
+          cover={<img alt="stadium" src={footballField.image} className="w-full h-64 object-cover" />}
         >
-          <h2 className="text-2xl font-bold">{data.name}</h2>
+          <h2 className="text-2xl font-bold">{footballField.name}</h2>
           <p className="text-gray-500 flex items-center">
-            <EnvironmentOutlined className="mr-2" /> {data.address}
+            <EnvironmentOutlined className="mr-2" /> {footballField.address}
           </p>
           <p className="text-gray-500 flex items-center">
-            <PhoneOutlined className="mr-2" /> {data.phone}
+            <PhoneOutlined className="mr-2" /> {footballField.phone}
           </p>
         </Card>
       </Link>
@@ -258,10 +270,13 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 
   try {
     const id = params?.id as string
-    const data = await getFootballFieldById(id);
+    const data = await getFieldsByIdFootball(id);
+    console.log("data", data.data);
+
     return {
       props: {
-        data: data.data
+        data: data.data,
+        revalidate: 60
       },
     };
   } catch (error) {
@@ -272,5 +287,5 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   }
 }
 
-Detail.Layout = Home;
+Detail.Layout = LayoutHomepage;
 export default Detail;   

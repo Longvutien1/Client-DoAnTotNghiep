@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import * as Antd from "antd";
 const { Button, Modal, Form, Input, Upload, Card } = Antd;
 
-import { UploadOutlined, EditOutlined } from "@ant-design/icons";
+import * as Icons from "@ant-design/icons";
+const { UploadOutlined, EditOutlined } = Icons;
 import LayoutManager from "@/components/Layout/layoutManager";
 import { useAppDispatch, useAppSelector } from "@/app/hook";
 import { getFootballFieldByIdUserSlice } from "@/features/footballField/footballField.slice";

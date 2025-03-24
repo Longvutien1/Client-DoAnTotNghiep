@@ -16,6 +16,10 @@ export const getTimeSlot = () => {
   return API_NodeJS.get<TimeSlot[]>(`timeSlot`);
 };
 
+export const getTimeSlotById = (id: string) => {
+  return API_NodeJS.get(`timeSlot/${id}`);
+};
+
 export const deleteTimeSlot = (id: string) => {
   return API_NodeJS.delete(`timeSlot/${id}`);
 };
